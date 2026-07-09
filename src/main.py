@@ -1,3 +1,4 @@
+from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import FastAPI, Request
@@ -12,7 +13,14 @@ from src.storage import db
 BASE_DIR = Path(__file__).resolve().parent
 templates = Jinja2Templates(directory=str(BASE_DIR / "web" / "templates"))
 
-app = FastAPI(title="Dokumenten-QA")
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    db.init_db()
+    yield
+
+
+app = FastAPI(title="Dokumenten-QA", lifespan=lifespan)
 
 app.add_exception_handler(APIError, api_error_handler)
 app.mount("/static", StaticFiles(directory=str(BASE_DIR / "web" / "static")), name="static")
@@ -20,11 +28,6 @@ app.mount("/static", StaticFiles(directory=str(BASE_DIR / "web" / "static")), na
 app.include_router(projects.router)
 app.include_router(documents.router)
 app.include_router(chat.router)
-
-
-@app.on_event("startup")
-def on_startup() -> None:
-    db.init_db()
 
 
 @app.get("/", response_class=HTMLResponse)

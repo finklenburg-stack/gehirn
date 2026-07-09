@@ -101,9 +101,9 @@ Single-Project-Layout gemäss plan.md: `src/`, `tests/`, `data/` im Repository-R
 
 ### Implementation for User Story 3
 
-- [ ] T025 [P] [US3] Sichtbare Anzeige und Auswahl des aktiven Projekts in `src/web/templates/base.html` (Navigationsleiste/Projektauswahl, wird von `projects.html` und `chat.html` verwendet) (depends on T015)
-- [ ] T026 [US3] Isolations-Review: alle Datenzugriffe in `src/storage/db.py` und Endpunkte in `src/api/documents.py`, `src/api/chat.py` daraufhin prüfen/härten, dass ausnahmslos nach `project_id` gefiltert wird und kein Pfad projektübergreifend liest (Prinzip III) (depends on T012, T017, T018, T021)
-- [ ] T027 [US3] Verifikation der Projekt-Isolation in `tests/integration/test_project_isolation.py`: zwei Projekte mit unterschiedlichen Test-PDFs anlegen, Cross-Projekt-Frage stellen, sicherstellen dass keine fremden Inhalte in Kontext/Antwort/Quellenangaben gelangen (siehe quickstart.md Szenario 3) (depends on T026)
+- [X] T025 [P] [US3] Sichtbare Anzeige und Auswahl des aktiven Projekts in `src/web/templates/base.html` (Navigationsleiste/Projektauswahl, wird von `projects.html` und `chat.html` verwendet) (depends on T015)
+- [X] T026 [US3] Isolations-Review: alle Datenzugriffe in `src/storage/db.py` und Endpunkte in `src/api/documents.py`, `src/api/chat.py` daraufhin prüfen/härten, dass ausnahmslos nach `project_id` gefiltert wird und kein Pfad projektübergreifend liest (Prinzip III) (depends on T012, T017, T018, T021)
+- [X] T027 [US3] Verifikation der Projekt-Isolation in `tests/integration/test_project_isolation.py`: zwei Projekte mit unterschiedlichen Test-PDFs anlegen, Cross-Projekt-Frage stellen, sicherstellen dass keine fremden Inhalte in Kontext/Antwort/Quellenangaben gelangen (siehe quickstart.md Szenario 3) (depends on T026)
 
 **Checkpoint**: Alle drei User Stories sind einzeln und im Zusammenspiel funktionsfähig
 
