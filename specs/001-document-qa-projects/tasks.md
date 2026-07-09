@@ -9,7 +9,7 @@ description: "Task list template for feature implementation"
 
 **Prerequisites**: plan.md, spec.md, research.md, data-model.md, contracts/api.md, quickstart.md
 
-**Tests**: In spec.md wurden keine automatisierten Tests explizit gefordert; formale Test-First-Tasks pro Story wurden daher ausgelassen. Eine gezielte Verifikation der (nicht verhandelbaren) Projekt-Isolation ist als eigene Task in Phase 5 enthalten.
+**Tests**: In spec.md wurden keine automatisierten Tests explizit gefordert; formale Test-First-Tasks pro Story wurden daher ausgelassen. Zwei gezielte Verifikations-Tasks sind trotzdem enthalten: Antwortqualität (T024, Phase 4) und Projekt-Isolation (T027, Phase 5) – beide adressieren nicht verhandelbare bzw. statistisch definierte Anforderungen aus spec.md (SC-002/SC-003 bzw. Prinzip III), die sich nicht allein durch manuelles Durchklicken verlässlich prüfen lassen.
 
 **Organization**: Tasks sind nach User Story gruppiert (siehe spec.md), damit jede Story unabhängig implementiert und getestet werden kann.
 
@@ -74,20 +74,22 @@ Single-Project-Layout gemäss plan.md: `src/`, `tests/`, `data/` im Repository-R
 
 ## Phase 4: User Story 2 - Frage stellen und belegte Antwort erhalten (Priority: P1)
 
-**Goal**: Nutzer stellt im aktiven Projekt eine Frage über ein Chat-Fenster und erhält eine Antwort, die ausschliesslich auf den projekteigenen PDFs basiert (mit Quellenangabe) oder eine ehrliche Fehlanzeige, inklusive Berücksichtigung des bisherigen Gesprächsverlaufs und einer sichtbaren Ladeanzeige.
+**Goal**: Nutzer stellt im aktiven Projekt eine Frage über ein Chat-Fenster und erhält eine Antwort, die ausschliesslich auf den projekteigenen PDFs basiert (mit Quellenangabe) oder eine ehrliche Fehlanzeige, inklusive Berücksichtigung des bisherigen Gesprächsverlaufs, einer sichtbaren Ladeanzeige und einer verständlichen Fehlermeldung statt stiller Kürzung, wenn der Kontext zu gross für das Modell wird.
 
-**Independent Test**: In einem Projekt mit mindestens einem verarbeiteten PDF (aus US1) eine Frage stellen, deren Antwort im PDF steht → belegte Antwort; Frage ohne Antwort im PDF → "nicht gefunden"; Folgefrage, die sich auf die vorherige Antwort bezieht → sinnvoll im Kontext beantwortet.
+**Independent Test**: In einem Projekt mit mindestens einem verarbeiteten PDF (aus US1) eine Frage stellen, deren Antwort im PDF steht → belegte Antwort; Frage ohne Antwort im PDF → "nicht gefunden"; Folgefrage, die sich auf die vorherige Antwort bezieht → sinnvoll im Kontext beantwortet; ein Testset aus bekannten Frage/Antwort-Paaren bestätigt die geforderte Trefferquote (SC-002/SC-003).
 
 ### Implementation for User Story 2
 
 - [ ] T017 [P] [US2] Nachrichten-Datenzugriff in `src/storage/db.py`: `create_message`, `list_messages(project_id)` sortiert nach `created_at` (depends on T005)
-- [ ] T018 [US2] Prompt-/Kontextaufbau und Anthropic-Anbindung in `src/core/claude_client.py`: baut System-Instruktion + Dokumentkontext (Seiten aus `document_pages` mit Seitenmarkierungen, nur Dokumente mit Status `ready`) + Gesprächsverlauf zusammen, ruft `anthropic`-SDK auf, parst Antworttext und Quellenangaben; System-Instruktion erzwingt explizit "nicht in den Unterlagen gefunden" statt erfundener Antworten (Prinzip II, FR-006) (depends on T012, T017, T006)
-- [ ] T019 [US2] Gesprächsverlauf-Zusammenstellung in `src/core/conversation.py`: liefert den bisherigen Verlauf eines Projekts in einem für `claude_client.py` verwendbaren Format (FR-014, FR-015) (depends on T017)
-- [ ] T020 [US2] Endpunkte `POST/GET /api/projects/{project_id}/messages` in `src/api/chat.py` gemäss contracts/api.md (Fehlercodes `content_required`, `no_documents`, `ai_unavailable`) (depends on T018, T019, T009)
-- [ ] T021 [US2] Chat-Oberfläche in `src/web/templates/chat.html` und `src/web/static/chat.js` (Frage-Eingabefeld, Anzeige Gesprächsverlauf inkl. Quellenangaben, sichtbarer Lade-/Bearbeitungsindikator zwischen Absenden und Antwort gemäss FR-016) (depends on T020)
-- [ ] T022 [US2] Fehlerfall "keine Dokumente im Projekt" behandeln: verständlicher Hinweis in Chat-Oberfläche statt Frage-Eingabe ins Leere laufen zu lassen (FR-009) (depends on T020, T021)
+- [ ] T018 [US2] Prompt-/Kontextaufbau und Anthropic-Anbindung in `src/core/claude_client.py`: baut System-Instruktion + Dokumentkontext (Seiten aus `document_pages` mit Seitenmarkierungen, nur Dokumente mit Status `ready`) + Gesprächsverlauf zusammen, ruft `anthropic`-SDK auf, parst Antworttext und Quellenangaben; System-Instruktion erzwingt explizit "nicht in den Unterlagen gefunden" statt erfundener Antworten (Prinzip II, FR-006); fängt Authentifizierungs-/Rate-Limit-/Verbindungsfehler des SDK ab und mappt sie auf den Fehlercode `ai_unavailable` (FR-009) (depends on T012, T017, T006)
+- [ ] T019 [US2] Kontextgrössen-Prüfung in `src/core/claude_client.py`: vor dem Anthropic-API-Call die Gesamtlänge des zusammengestellten Kontexts (Dokumenttext + Gesprächsverlauf) gegen ein konfigurierbares Tokenbudget prüfen; bei Überschreitung KEINE stille Kürzung vornehmen, sondern den Fehlercode `context_too_large` mit verständlicher Meldung zurückgeben (schützt Prinzip II/IV vor unbemerkt unvollständigem Kontext, adressiert Edge Case "sehr umfangreiches PDF" und contracts/api.md Response 413) (depends on T018)
+- [ ] T020 [US2] Gesprächsverlauf-Zusammenstellung in `src/core/conversation.py`: liefert den bisherigen Verlauf eines Projekts in einem für `claude_client.py` verwendbaren Format (FR-014, FR-015) (depends on T017)
+- [ ] T021 [US2] Endpunkte `POST/GET /api/projects/{project_id}/messages` in `src/api/chat.py` gemäss contracts/api.md (Fehlercodes `content_required`, `no_documents`, `ai_unavailable`, `context_too_large`) (depends on T018, T019, T020, T009)
+- [ ] T022 [US2] Chat-Oberfläche in `src/web/templates/chat.html` und `src/web/static/chat.js` (Frage-Eingabefeld, Anzeige Gesprächsverlauf inkl. Quellenangaben, sichtbarer Lade-/Bearbeitungsindikator zwischen Absenden und Antwort gemäss FR-016, verständliche Anzeige bei `context_too_large`) (depends on T021)
+- [ ] T023 [US2] Fehlerfall "keine Dokumente im Projekt" behandeln: verständlicher Hinweis in Chat-Oberfläche statt Frage-Eingabe ins Leere laufen zu lassen (FR-009) (depends on T021, T022)
+- [ ] T024 [US2] Antwortqualitäts-Verifikation in `tests/integration/test_answer_quality.py`: kleines Set von Testfragen mit bekannter, im PDF vorhandener Antwort sowie Testfragen ohne Antwort im PDF definieren und gegen den Chat-Endpunkt (T021) laufen lassen, um SC-002 (≥90% korrekte belegte Antworten) und SC-003 (100% korrekte "nicht gefunden"-Meldung) stichprobenartig und wiederholbar zu verifizieren (depends on T015, T021)
 
-**Checkpoint**: User Story 1 UND 2 funktionieren zusammen als nutzbares MVP (Projekt anlegen, PDFs hochladen, Fragen stellen und belegte Antworten mit Verlauf erhalten)
+**Checkpoint**: User Story 1 UND 2 funktionieren zusammen als nutzbares MVP (Projekt anlegen, PDFs hochladen, Fragen stellen und belegte Antworten mit Verlauf erhalten, inkl. Absicherung gegen zu grosse Kontexte und Qualitäts-Stichprobe)
 
 ---
 
@@ -99,9 +101,9 @@ Single-Project-Layout gemäss plan.md: `src/`, `tests/`, `data/` im Repository-R
 
 ### Implementation for User Story 3
 
-- [ ] T023 [P] [US3] Sichtbare Anzeige und Auswahl des aktiven Projekts in `src/web/templates/base.html` (Navigationsleiste/Projektauswahl, wird von `projects.html` und `chat.html` verwendet) (depends on T015)
-- [ ] T024 [US3] Isolations-Review: alle Datenzugriffe in `src/storage/db.py` und Endpunkte in `src/api/documents.py`, `src/api/chat.py` daraufhin prüfen/härten, dass ausnahmslos nach `project_id` gefiltert wird und kein Pfad projektübergreifend liest (Prinzip III) (depends on T012, T017, T018, T020)
-- [ ] T025 [US3] Verifikation der Projekt-Isolation in `tests/integration/test_project_isolation.py`: zwei Projekte mit unterschiedlichen Test-PDFs anlegen, Cross-Projekt-Frage stellen, sicherstellen dass keine fremden Inhalte in Kontext/Antwort/Quellenangaben gelangen (siehe quickstart.md Szenario 3) (depends on T024)
+- [ ] T025 [P] [US3] Sichtbare Anzeige und Auswahl des aktiven Projekts in `src/web/templates/base.html` (Navigationsleiste/Projektauswahl, wird von `projects.html` und `chat.html` verwendet) (depends on T015)
+- [ ] T026 [US3] Isolations-Review: alle Datenzugriffe in `src/storage/db.py` und Endpunkte in `src/api/documents.py`, `src/api/chat.py` daraufhin prüfen/härten, dass ausnahmslos nach `project_id` gefiltert wird und kein Pfad projektübergreifend liest (Prinzip III) (depends on T012, T017, T018, T021)
+- [ ] T027 [US3] Verifikation der Projekt-Isolation in `tests/integration/test_project_isolation.py`: zwei Projekte mit unterschiedlichen Test-PDFs anlegen, Cross-Projekt-Frage stellen, sicherstellen dass keine fremden Inhalte in Kontext/Antwort/Quellenangaben gelangen (siehe quickstart.md Szenario 3) (depends on T026)
 
 **Checkpoint**: Alle drei User Stories sind einzeln und im Zusammenspiel funktionsfähig
 
@@ -111,10 +113,10 @@ Single-Project-Layout gemäss plan.md: `src/`, `tests/`, `data/` im Repository-R
 
 **Purpose**: Verbesserungen, die mehrere User Stories betreffen
 
-- [ ] T026 [P] Logging-Durchsicht: sicherstellen, dass der Anthropic-API-Key in keiner Log-Ausgabe erscheint (Prinzip V) in `src/config.py` und `src/core/claude_client.py`
-- [ ] T027 [P] `README.md` im Repository-Root mit Kurzfassung der Setup-/Start-Anleitung aus `specs/001-document-qa-projects/quickstart.md`
-- [ ] T028 Vollständige Quickstart-Validierung: alle 6 Szenarien aus `specs/001-document-qa-projects/quickstart.md` manuell durchlaufen
-- [ ] T029 [P] `pyproject.toml`/`requirements.txt` finalisieren (Versionsangaben prüfen, ungenutzte Abhängigkeiten entfernen)
+- [ ] T028 [P] Logging-Durchsicht: sicherstellen, dass der Anthropic-API-Key in keiner Log-Ausgabe erscheint (Prinzip V) in `src/config.py` und `src/core/claude_client.py`
+- [ ] T029 [P] `README.md` im Repository-Root mit Kurzfassung der Setup-/Start-Anleitung aus `specs/001-document-qa-projects/quickstart.md`
+- [ ] T030 Vollständige Quickstart-Validierung: alle 6 Szenarien aus `specs/001-document-qa-projects/quickstart.md` manuell durchlaufen
+- [ ] T031 [P] `pyproject.toml`/`requirements.txt` finalisieren (Versionsangaben prüfen, ungenutzte Abhängigkeiten entfernen)
 
 ---
 
@@ -125,14 +127,14 @@ Single-Project-Layout gemäss plan.md: `src/`, `tests/`, `data/` im Repository-R
 - **Setup (Phase 1)**: Keine Abhängigkeiten – kann sofort starten
 - **Foundational (Phase 2)**: Abhängig von Setup – blockiert alle User Stories
 - **User Story 1 (Phase 3)**: Abhängig von Foundational
-- **User Story 2 (Phase 4)**: Abhängig von Foundational; nutzt Dokumente/Status aus US1 zur Laufzeit, ist aber code-seitig unabhängig entwickelbar (Datenzugriff über eigene Funktionen)
+- **User Story 2 (Phase 4)**: Abhängig von Foundational; nutzt Dokumente/Status aus US1 zur Laufzeit und hat eine Datenschema-Abhängigkeit zu T012 (Dokument-/Seiten-Tabellen aus US1); API-Endpunkte und UI von US2 sind davon unabhängig entwickelbar
 - **User Story 3 (Phase 5)**: Abhängig von Foundational sowie den in US1/US2 geschaffenen Datenzugriffs- und Endpunktfunktionen, die gehärtet werden
 - **Polish (Phase 6)**: Abhängig vom Abschluss der gewünschten User Stories
 
 ### User Story Dependencies
 
 - **User Story 1 (P1)**: Keine Abhängigkeit zu anderen Stories – eigenständig testbar
-- **User Story 2 (P1)**: Für einen sinnvollen End-to-End-Test wird mindestens ein Dokument aus US1 benötigt; die Implementierung selbst (Nachrichten, Prompt-Aufbau) ist unabhängig
+- **User Story 2 (P1)**: Für einen sinnvollen End-to-End-Test wird mindestens ein Dokument aus US1 benötigt; ausserdem hat T018 eine Datenschema-Abhängigkeit zu T012 (US1). API-Endpunkte, Prompt-Aufbau und UI sind darüber hinaus unabhängig
 - **User Story 3 (P2)**: Baut auf den Datenzugriffs-/Endpunktfunktionen aus US1 und US2 auf (Isolations-Härtung), daher sinnvollerweise nach US1/US2 umzusetzen
 
 ### Within Each User Story
@@ -148,7 +150,7 @@ Single-Project-Layout gemäss plan.md: `src/`, `tests/`, `data/` im Repository-R
 - T006, T007, T009 (Foundational) parallel, nachdem T005 steht
 - T010, T011 (US1) parallel
 - T017 (US2) kann parallel zu US1-Tasks starten, sobald Foundational steht
-- T023 (US3) kann parallel zu T024/T025 vorbereitet werden
+- T025 (US3) kann parallel zu T026/T027 vorbereitet werden
 
 ---
 
@@ -169,14 +171,14 @@ Task: "Seitenweise PDF-Textextraktion in src/core/pdf_extraction.py"
 1. Phase 1: Setup abschliessen
 2. Phase 2: Foundational abschliessen (blockiert alles andere)
 3. Phase 3: User Story 1 abschliessen → Projekte/PDFs funktionieren eigenständig
-4. Phase 4: User Story 2 abschliessen → **MVP erreicht**: Kernnutzen (belegte Antworten aus eigenen PDFs) ist nutzbar
+4. Phase 4: User Story 2 abschliessen (inkl. T019 Kontextgrössen-Prüfung und T024 Antwortqualitäts-Verifikation) → **MVP erreicht**: Kernnutzen (belegte Antworten aus eigenen PDFs) ist nutzbar und stichprobenartig verifiziert
 5. **STOPPEN und VALIDIEREN**: Quickstart-Szenarien 1, 2, 4, 5, 6 durchlaufen
 
 ### Incremental Delivery
 
 1. Setup + Foundational → Fundament steht
 2. User Story 1 → eigenständig testbar (Projektverwaltung)
-3. User Story 2 → MVP nutzbar (Kernnutzen: belegte Antworten)
+3. User Story 2 → MVP nutzbar (Kernnutzen: belegte Antworten, gegen Kontextüberlauf abgesichert, qualitativ verifiziert)
 4. User Story 3 → Mehrprojekt-Nutzung sauber abgesichert (Quickstart-Szenario 3)
 5. Polish → Feinschliff, Dokumentation, vollständige Quickstart-Validierung
 

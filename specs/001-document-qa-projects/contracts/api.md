@@ -90,6 +90,11 @@ Gesprächsverlauf desselben Projekts aufbauen (Prinzip II, III).
 - **Response 502**: Anthropic API nicht erreichbar/Key ungültig/Kontingent
   erschöpft – `{ "error": "ai_unavailable", "detail": string }` (Edge Case
   "API-Key fehlt/ungültig/Kontingent erschöpft")
+- **Response 413**: Der zusammengestellte Kontext (Dokumenttext +
+  Gesprächsverlauf) überschreitet das Kontextfenster des Modells –
+  `{ "error": "context_too_large", "detail": string }`. Der Server MUSS in
+  diesem Fall die Anfrage ablehnen statt den Kontext still zu kürzen, damit
+  keine Antwort auf Basis unvollständiger Dokumente entsteht (Prinzip II/IV).
 
 Hinweis: Die Antwort wird nach vollständigem Abschluss der Anthropic-Anfrage
 zurückgegeben (kein Streaming in v1, siehe research.md §7). Das Frontend

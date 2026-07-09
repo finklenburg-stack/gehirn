@@ -77,6 +77,15 @@ Prinzipien aus `.specify/memory/constitution.md` ausgerichtet, insbesondere
   vorgibt, die dies zwingend nötig macht. Kann als spätere Erweiterung
   nachgerüstet werden, falls einzelne Projekte das Kontextfenster
   sprengen (das wäre dann ein neues Feature mit eigener Spec).
+- **Ergänzung nach `/speckit-analyze`**: Da "kein hartes Grössenlimit"
+  (Assumption in spec.md) sonst dazu führen könnte, dass der Kontext
+  unbemerkt gekürzt wird, prüft `claude_client.py` vor dem API-Call die
+  Gesamtgrösse des Kontexts gegen ein Tokenbudget und lehnt die Anfrage mit
+  einer verständlichen Fehlermeldung ab (`context_too_large`, siehe
+  contracts/api.md), statt still zu kürzen. Das schliesst v1 nicht gegen
+  grosse Projekte ab, verhindert aber eine stillschweigende Verletzung von
+  Prinzip II/IV. Volles Chunking/Retrieval bleibt weiterhin als spätere
+  Erweiterung offen.
 
 ## 5. Anthropic-Anbindung & API-Key-Handling
 
