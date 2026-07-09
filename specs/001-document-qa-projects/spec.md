@@ -8,6 +8,12 @@
 
 **Input**: User description: "Ich will ein Tool bauen das mir anhand von Dokumenten eine Antwort auf spezifische Fragen gibt, z.B. mache ich ein CAS habe PDF vom Dozenten erhalten und will die Antworten nur anhand dieser PDF erhalten. Ich will verschiedene Projekte für verschiedene Themen also verschiedene CAS oder andere Sachen anlegen können und für jedes Projekt sollen nur die richtigen PDF verwendet werden. Das Tool soll über einen Anthropic API-Key die KI verwenden und mir so die richtige Antwort auf meine Frage gemäss diesen PDF liefern."
 
+## Clarifications
+
+### Session 2026-07-09
+
+- Q: Über welche Zugriffsart/Interface soll der Nutzer mit dem Tool interagieren? → A: Lokale Web-Oberfläche im Browser (Formulare, Drag&Drop-Upload, Chat-Fenster)
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Projekt anlegen und PDFs zuordnen (Priority: P1)
@@ -21,7 +27,7 @@ Als Nutzer möchte ich ein neues Projekt (z.B. für ein bestimmtes CAS oder Them
 **Acceptance Scenarios**:
 
 1. **Given** noch kein Projekt existiert, **When** der Nutzer ein neues Projekt mit einem Namen anlegt, **Then** existiert ein leeres Projekt, dem Dokumente zugeordnet werden können.
-2. **Given** ein bestehendes Projekt, **When** der Nutzer eine PDF-Datei zu diesem Projekt hinzufügt, **Then** ist die Datei diesem Projekt zugeordnet und in der Dokumentenliste des Projekts sichtbar.
+2. **Given** ein bestehendes Projekt, **When** der Nutzer eine PDF-Datei per Drag&Drop oder Datei-Auswahl in der Web-Oberfläche zu diesem Projekt hinzufügt, **Then** ist die Datei diesem Projekt zugeordnet und in der Dokumentenliste des Projekts sichtbar.
 3. **Given** ein bestehendes Projekt mit Dokumenten, **When** der Nutzer ein Dokument entfernt, **Then** wird dieses Dokument bei zukünftigen Fragen in diesem Projekt nicht mehr berücksichtigt.
 
 ---
@@ -82,6 +88,7 @@ Als Nutzer möchte ich zwischen mehreren Projekten wechseln können, wobei Frage
 - **FR-010**: System MUSS mehrere Projekte parallel verwalten können, ohne dass Dokumente oder Antworten zwischen Projekten vermischt werden.
 - **FR-011**: System MUSS erkennbar anzeigen, welches Projekt aktuell aktiv ist, bevor eine Frage beantwortet wird.
 - **FR-012**: System MUSS den Nutzer informieren, wenn ein hochgeladenes Dokument kein verarbeitbares PDF ist (z.B. beschädigt oder ohne extrahierbaren Text).
+- **FR-013**: System MUSS über eine lokale Web-Oberfläche im Browser bedienbar sein: Projekte verwalten und PDFs per Drag&Drop (oder Datei-Auswahl) hochladen sowie Fragen über ein Chat-artiges Eingabefeld stellen und die Antworten dort anzeigen.
 
 ### Key Entities
 
