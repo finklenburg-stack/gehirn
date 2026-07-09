@@ -113,10 +113,10 @@ Single-Project-Layout gemäss plan.md: `src/`, `tests/`, `data/` im Repository-R
 
 **Purpose**: Verbesserungen, die mehrere User Stories betreffen
 
-- [ ] T028 [P] Logging-Durchsicht: sicherstellen, dass der Anthropic-API-Key in keiner Log-Ausgabe erscheint (Prinzip V) in `src/config.py` und `src/core/claude_client.py`
-- [ ] T029 [P] `README.md` im Repository-Root mit Kurzfassung der Setup-/Start-Anleitung aus `specs/001-document-qa-projects/quickstart.md`
-- [ ] T030 Vollständige Quickstart-Validierung: alle 6 Szenarien aus `specs/001-document-qa-projects/quickstart.md` manuell durchlaufen
-- [ ] T031 [P] `pyproject.toml`/`requirements.txt` finalisieren (Versionsangaben prüfen, ungenutzte Abhängigkeiten entfernen)
+- [X] T028 [P] Logging-Durchsicht: sicherstellen, dass der Anthropic-API-Key in keiner Log-Ausgabe erscheint (Prinzip V) in `src/config.py` und `src/core/claude_client.py`
+- [X] T029 [P] `README.md` im Repository-Root mit Kurzfassung der Setup-/Start-Anleitung aus `specs/001-document-qa-projects/quickstart.md`
+- [X] T030 Vollständige Quickstart-Validierung: alle 6 Szenarien aus `specs/001-document-qa-projects/quickstart.md` manuell durchlaufen
+- [X] T031 [P] `pyproject.toml`/`requirements.txt` finalisieren (Versionsangaben prüfen, ungenutzte Abhängigkeiten entfernen)
 
 ---
 
