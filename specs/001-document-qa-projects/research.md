@@ -129,13 +129,43 @@ Prinzipien aus `.specify/memory/constitution.md` ausgerichtet, insbesondere
 
 ## 8. Tests
 
-- **Decision**: `pytest` mit FastAPI's `TestClient` für
-  Contract-/Integrationstests; einfache Unit-Tests für PDF-Extraktion und
-  Prompt-Aufbau.
-- **Rationale**: Standard-Testwerkzeug im Python/FastAPI-Ökosystem, keine
-  zusätzliche Lernkurve.
-- **Alternatives considered**: keine – Standardwahl ohne sinnvolle
-  Alternative in diesem Ökosystem.
+- **Decision**: `pytest` (bereits als Dev-Dependency eingeplant) wird
+  gezielt für zwei automatisierte Verifikations-Tests eingesetzt, die
+  nicht verhandelbare bzw. statistisch definierte Anforderungen prüfen:
+  Antwortqualität (`tests/integration/test_answer_quality.py`, SC-002/
+  SC-003) und Projekt-Isolation (`tests/integration/test_project_isolation.py`,
+  Prinzip III). Eine vollständige Contract-/Unit-Test-Suite (z.B. für
+  jeden Endpunkt einzeln oder für `pdf_extraction.py`) ist für v1 NICHT
+  eingeplant.
+- **Rationale**: In spec.md wurden keine automatisierten Tests explizit
+  gefordert (siehe tasks.md-Kopfzeile "Tests"); eine umfassende
+  Test-Suite für ein Ein-Personen-Tool ohne diese Anforderung würde
+  Prinzip I (Einfachheit zuerst) widersprechen. Die zwei genannten Tests
+  sind die Ausnahme, weil sie nicht verhandelbare Constitution-Prinzipien
+  (II/III/IV) bzw. statistische Erfolgskriterien (SC-002/SC-003) prüfen,
+  die sich durch einmaliges manuelles Durchklicken (Quickstart) nicht
+  verlässlich verifizieren lassen.
+- **Alternatives considered**: Vollständige Contract-/Unit-Test-Suite von
+  Anfang an – verworfen für v1 zugunsten der zwei gezielten
+  Verifikations-Tests; kann bei Bedarf jederzeit ergänzt werden, da
+  `pytest` + FastAPI `TestClient` als Tooling bereits vorhanden sind.
+
+## 9. Antwortkonsistenz bei wiederholter Frage
+
+- **Decision**: Es wird keine Wortidentität zwischen Antworten auf
+  identische, wiederholt gestellte Fragen garantiert. Jede Anfrage wird
+  unabhängig (ohne Antwort-Caching) anhand der aktuell zugeordneten
+  Dokumente und des aktuellen Gesprächsverlaufs neu an die Anthropic API
+  gestellt.
+- **Rationale**: Ein Caching-Mechanismus für identische Fragen würde
+  zusätzliche Komplexität (Cache-Invalidierung bei Dokumentänderungen,
+  Schlüsselbildung über Gesprächsverlauf) einführen, ohne dass spec.md
+  Wortidentität fordert – nur inhaltliche Korrektheit und Quellentreue
+  (Prinzip II, FR-006) sind nicht verhandelbar und bleiben bei jeder
+  Anfrage unabhängig gewährleistet.
+- **Alternatives considered**: Antwort-Caching pro (Projekt, Frage,
+  Dokumentstand) – verworfen für v1 als unnötige Komplexität (Prinzip I);
+  kann bei Bedarf als spätere Optimierung nachgerüstet werden.
 
 ## Offene Punkte für spätere Iterationen (nicht v1)
 
@@ -143,6 +173,8 @@ Prinzipien aus `.specify/memory/constitution.md` ausgerichtet, insbesondere
 - Embedding-/Vektor-basiertes Retrieval, falls einzelne Projekte das
   Kontextfenster des Modells überschreiten.
 - Streaming von Antworten für schnellere wahrgenommene Reaktionszeit.
+- Vollständige Contract-/Unit-Test-Suite über die zwei in Abschnitt 8
+  genannten Verifikations-Tests hinaus.
 
 Alle `NEEDS CLARIFICATION`-Punkte aus dem Technical Context sind durch die
 obigen Entscheidungen aufgelöst.

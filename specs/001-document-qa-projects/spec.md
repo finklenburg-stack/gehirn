@@ -112,7 +112,7 @@ Als Nutzer möchte ich zwischen mehreren Projekten wechseln können, wobei Frage
 - **SC-002**: Bei Fragen, deren Antwort eindeutig in den zugeordneten PDFs steht, liefert das Tool in mindestens 90% der Fälle eine inhaltlich korrekte, belegte Antwort.
 - **SC-003**: Bei Fragen, deren Antwort nicht in den zugeordneten PDFs enthalten ist, meldet das Tool in 100% der Fälle, dass keine Antwort gefunden wurde, statt eine erfundene Antwort zu liefern.
 - **SC-004**: Bei keinem Test wird eine Information aus einem anderen Projekt in die Antwort eines aktiven Projekts übernommen (0% Vermischung zwischen Projekten).
-- **SC-005**: Jede gelieferte Antwort enthält eine nachvollziehbare Quellenangabe, die der Nutzer ohne technisches Vorwissen einem Dokument zuordnen kann.
+- **SC-005**: Jede gelieferte Antwort zeigt zu jeder Quelle mindestens den Dateinamen und, falls verfügbar, die Seitenzahl sichtbar an, sodass der Nutzer sie ohne technisches Vorwissen einem Dokument zuordnen kann.
 - **SC-006**: Während der Verarbeitung einer Frage sieht der Nutzer zu jedem Zeitpunkt eine sichtbare Rückmeldung, dass das System noch arbeitet (kein eingefrorener oder stummer Zustand), unabhängig von der tatsächlichen Antwortdauer.
 
 ## Assumptions
@@ -122,3 +122,4 @@ Als Nutzer möchte ich zwischen mehreren Projekten wechseln können, wobei Frage
 - PDFs enthalten durchsuchbaren Text; OCR für gescannte Bilddokumente ist für die erste Version nicht zwingend erforderlich (kann als spätere Erweiterung betrachtet werden).
 - Es gibt kein hartes Limit für Anzahl oder Grösse der PDFs pro Projekt in der ersten Version; sehr grosse Dokumente können die Antwortzeit verlängern.
 - Antworten werden in der Sprache der gestellten Frage bzw. der Dokumente formuliert (i.d.R. Deutsch), ohne dass dies gesondert konfiguriert werden muss.
+- Bei mehrfacher Stellung derselben Frage wird keine wortidentische Antwort garantiert (kein Antwort-Caching in v1): Jede Anfrage wird unabhängig anhand der aktuell zugeordneten Dokumente und des aktuellen Gesprächsverlaufs neu beantwortet. Inhaltlich MUSS die Antwort weiterhin durchgehend Prinzip II (nur Quelldokumente) und FR-006 (ehrliche Fehlanzeige) einhalten.

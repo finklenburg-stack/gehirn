@@ -79,6 +79,15 @@ Nutzerfrage oder eine System-/Assistenten-Antwort (FR-005, FR-014, FR-015).
 | `sources` | TEXT (JSON) | Nur bei `role = assistant`: Liste von `{document_id, filename, page_number}` – leer, wenn "nicht in den Unterlagen gefunden" geantwortet wurde |
 | `created_at` | TIMESTAMP | Automatisch gesetzt, bestimmt Reihenfolge im Gesprächsverlauf |
 
+`sources` speichert `filename` bewusst redundant zum Zeitpunkt der Antwort
+(kein Live-Join über `document_id`). Das beantwortet den Edge Case "Folgefrage
+bezieht sich auf ein zwischenzeitlich entferntes Dokument" aus spec.md: Auch
+nachdem ein Dokument gelöscht wurde, bleibt die historische Quellenangabe im
+Gesprächsverlauf über den gespeicherten `filename` lesbar. Die Web-Oberfläche
+MUSS `document_id`-Verweise, die auf kein mehr existierendes Dokument zeigen,
+tolerant behandeln (Anzeige des gespeicherten Dateinamens mit Hinweis
+"Dokument entfernt" statt eines Fehlers/toten Links).
+
 **Gesprächsverlauf** (siehe spec.md Key Entities) ist keine eigene Tabelle,
 sondern die nach `created_at` sortierte Liste aller `Nachricht`-Einträge
 eines Projekts – wird für Folgefragen als Kontext mitgegeben (FR-014).

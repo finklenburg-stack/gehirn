@@ -30,8 +30,10 @@ SDK), `pypdf`, `python-dotenv`; `pytest` als Dev-Dependency
 Projekte/Dokumente/Nachrichten; Original-PDFs als Dateien im lokalen
 Dateisystem unter `data/<project-id>/documents/`
 
-**Testing**: `pytest` + FastAPI `TestClient` für Contract-/Integrationstests,
-einfache Unit-Tests für PDF-Extraktion und Prompt-Aufbau
+**Testing**: `pytest` + FastAPI `TestClient`, gezielt für zwei automatisierte
+Verifikations-Tests (Antwortqualität gegen SC-002/SC-003, Projekt-Isolation
+gegen Prinzip III) – siehe research.md §8. Keine vollständige
+Contract-/Unit-Test-Suite in v1 (Prinzip I)
 
 **Target Platform**: Lokaler Rechner (Linux/macOS/Windows), Zugriff über
 Browser via `http://localhost`
