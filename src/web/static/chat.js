@@ -56,7 +56,7 @@
       });
       const body = await response.json().catch(() => ({}));
       if (!response.ok) {
-        errorEl.textContent = ERROR_MESSAGES[body.error] || body.detail || "Unbekannter Fehler.";
+        errorEl.textContent = body.detail || ERROR_MESSAGES[body.error] || "Unbekannter Fehler.";
         errorEl.hidden = false;
         return;
       }
