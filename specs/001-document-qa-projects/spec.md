@@ -13,6 +13,7 @@
 ### Session 2026-07-09
 
 - Q: Über welche Zugriffsart/Interface soll der Nutzer mit dem Tool interagieren? → A: Lokale Web-Oberfläche im Browser (Formulare, Drag&Drop-Upload, Chat-Fenster)
+- Q: Sollen Folgefragen sich auf vorherige Fragen/Antworten im selben Projekt beziehen können (Gesprächskontext)? → A: Ja, Chat mit Verlauf – Folgefragen beziehen sich auf den bisherigen Gesprächsverlauf im selben Projekt
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -45,6 +46,7 @@ Als Nutzer möchte ich innerhalb eines Projekts eine Frage stellen und eine Antw
 1. **Given** ein Projekt mit mindestens einem PDF, das die Antwort auf eine Frage enthält, **When** der Nutzer diese Frage stellt, **Then** liefert das Tool eine inhaltlich korrekte Antwort mit Angabe des Quelldokuments.
 2. **Given** ein Projekt, dessen zugeordnete PDFs die gestellte Frage nicht beantworten, **When** der Nutzer diese Frage stellt, **Then** teilt das Tool explizit mit, dass die Antwort in den Unterlagen nicht gefunden wurde, statt eine Antwort zu erfinden.
 3. **Given** ein Projekt ohne zugeordnete Dokumente, **When** der Nutzer eine Frage stellt, **Then** weist das Tool darauf hin, dass zuerst Dokumente hinzugefügt werden müssen.
+4. **Given** eine bereits beantwortete Frage im aktiven Projekt, **When** der Nutzer eine Folgefrage stellt, die sich auf die vorherige Antwort bezieht, **Then** berücksichtigt das Tool den bisherigen Gesprächsverlauf bei der Beantwortung, bleibt dabei aber weiterhin ausschliesslich auf die PDFs des Projekts gestützt.
 
 ---
 
@@ -71,6 +73,7 @@ Als Nutzer möchte ich zwischen mehreren Projekten wechseln können, wobei Frage
 - Was passiert, wenn ein Projekt gelöscht wird, während es noch Dokumente enthält?
 - Was passiert, wenn dieselbe Frage in einem Projekt mehrfach gestellt wird – liefert das Tool konsistent dieselbe Antwort?
 - Was passiert, wenn ein einzelnes PDF sehr umfangreich ist (z.B. mehrere hundert Seiten)?
+- Was passiert, wenn eine Folgefrage sich auf ein Dokument bezieht, das zwischenzeitlich aus dem Projekt entfernt wurde?
 
 ## Requirements *(mandatory)*
 
@@ -89,12 +92,15 @@ Als Nutzer möchte ich zwischen mehreren Projekten wechseln können, wobei Frage
 - **FR-011**: System MUSS erkennbar anzeigen, welches Projekt aktuell aktiv ist, bevor eine Frage beantwortet wird.
 - **FR-012**: System MUSS den Nutzer informieren, wenn ein hochgeladenes Dokument kein verarbeitbares PDF ist (z.B. beschädigt oder ohne extrahierbaren Text).
 - **FR-013**: System MUSS über eine lokale Web-Oberfläche im Browser bedienbar sein: Projekte verwalten und PDFs per Drag&Drop (oder Datei-Auswahl) hochladen sowie Fragen über ein Chat-artiges Eingabefeld stellen und die Antworten dort anzeigen.
+- **FR-014**: System MUSS bei der Beantwortung einer Frage den bisherigen Gesprächsverlauf desselben Projekts als Kontext berücksichtigen, sodass Folgefragen sich auf vorherige Fragen/Antworten beziehen können, ohne die Grundregel (ausschliesslich Antworten aus den zugeordneten PDFs) zu verletzen.
+- **FR-015**: System MUSS den Gesprächsverlauf pro Projekt sichtbar darstellen, damit der Nutzer nachvollziehen kann, worauf sich eine Folgefrage bezieht.
 
 ### Key Entities
 
 - **Projekt**: Eine thematische Arbeitseinheit (z.B. ein CAS oder Kursthema) mit einem Namen; besitzt eine Menge zugeordneter Dokumente und dient als Kontext-Grenze für Fragen.
 - **Dokument**: Eine PDF-Datei, die genau einem Projekt zugeordnet ist; dient als alleinige Wissensquelle für Fragen innerhalb dieses Projekts.
 - **Frage/Antwort**: Eine vom Nutzer gestellte Frage innerhalb eines aktiven Projekts sowie die daraus resultierende Antwort inklusive Quellenangabe(n).
+- **Gesprächsverlauf**: Die geordnete Abfolge von Frage/Antwort-Paaren innerhalb eines Projekts; dient als zusätzlicher Kontext für Folgefragen im selben Projekt und ist pro Projekt getrennt.
 
 ## Success Criteria *(mandatory)*
 
