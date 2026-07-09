@@ -14,6 +14,7 @@
 
 - Q: Über welche Zugriffsart/Interface soll der Nutzer mit dem Tool interagieren? → A: Lokale Web-Oberfläche im Browser (Formulare, Drag&Drop-Upload, Chat-Fenster)
 - Q: Sollen Folgefragen sich auf vorherige Fragen/Antworten im selben Projekt beziehen können (Gesprächskontext)? → A: Ja, Chat mit Verlauf – Folgefragen beziehen sich auf den bisherigen Gesprächsverlauf im selben Projekt
+- Q: Welche Antwortzeit wird von einer gestellten Frage erwartet? → A: Best Effort ohne festes Zeitlimit; während der Verarbeitung wird dem Nutzer sichtbar angezeigt, dass noch gearbeitet wird
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -94,6 +95,7 @@ Als Nutzer möchte ich zwischen mehreren Projekten wechseln können, wobei Frage
 - **FR-013**: System MUSS über eine lokale Web-Oberfläche im Browser bedienbar sein: Projekte verwalten und PDFs per Drag&Drop (oder Datei-Auswahl) hochladen sowie Fragen über ein Chat-artiges Eingabefeld stellen und die Antworten dort anzeigen.
 - **FR-014**: System MUSS bei der Beantwortung einer Frage den bisherigen Gesprächsverlauf desselben Projekts als Kontext berücksichtigen, sodass Folgefragen sich auf vorherige Fragen/Antworten beziehen können, ohne die Grundregel (ausschliesslich Antworten aus den zugeordneten PDFs) zu verletzen.
 - **FR-015**: System MUSS den Gesprächsverlauf pro Projekt sichtbar darstellen, damit der Nutzer nachvollziehen kann, worauf sich eine Folgefrage bezieht.
+- **FR-016**: System MUSS während der Verarbeitung einer Frage eine sichtbare Rückmeldung anzeigen (z.B. Lade-/Bearbeitungsanzeige), dass die Antwort noch generiert wird; eine feste Zeitvorgabe für die Antwortdauer besteht nicht (Best Effort).
 
 ### Key Entities
 
@@ -111,6 +113,7 @@ Als Nutzer möchte ich zwischen mehreren Projekten wechseln können, wobei Frage
 - **SC-003**: Bei Fragen, deren Antwort nicht in den zugeordneten PDFs enthalten ist, meldet das Tool in 100% der Fälle, dass keine Antwort gefunden wurde, statt eine erfundene Antwort zu liefern.
 - **SC-004**: Bei keinem Test wird eine Information aus einem anderen Projekt in die Antwort eines aktiven Projekts übernommen (0% Vermischung zwischen Projekten).
 - **SC-005**: Jede gelieferte Antwort enthält eine nachvollziehbare Quellenangabe, die der Nutzer ohne technisches Vorwissen einem Dokument zuordnen kann.
+- **SC-006**: Während der Verarbeitung einer Frage sieht der Nutzer zu jedem Zeitpunkt eine sichtbare Rückmeldung, dass das System noch arbeitet (kein eingefrorener oder stummer Zustand), unabhängig von der tatsächlichen Antwortdauer.
 
 ## Assumptions
 
