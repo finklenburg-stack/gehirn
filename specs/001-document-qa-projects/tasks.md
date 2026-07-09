@@ -60,13 +60,13 @@ Single-Project-Layout gemäss plan.md: `src/`, `tests/`, `data/` im Repository-R
 
 ### Implementation for User Story 1
 
-- [ ] T010 [P] [US1] Projekt-Datenzugriff in `src/storage/db.py`: `create_project`, `list_projects`, `get_project`, `delete_project` (kaskadierendes Löschen von Dokumenten/Nachrichten gemäss data-model.md) (depends on T005)
-- [ ] T011 [P] [US1] Seitenweise PDF-Textextraktion in `src/core/pdf_extraction.py` (nutzt `pypdf`; liefert Liste von Seiten-Texten oder wirft Fehler bei ungültigem/textlosem PDF)
-- [ ] T012 [US1] Dokument-Datenzugriff in `src/storage/db.py`: `create_document`, `list_documents`, `update_document_status`, `save_document_pages`, `delete_document` (depends on T010, T011)
-- [ ] T013 [US1] Endpunkte `POST /api/projects`, `GET /api/projects`, `DELETE /api/projects/{project_id}` in `src/api/projects.py` gemäss contracts/api.md (Namens-Pflicht/-Eindeutigkeit, Fehlercodes `name_required`/`name_taken`) (depends on T010, T009)
-- [ ] T014 [US1] Endpunkte `POST/GET/DELETE /api/projects/{project_id}/documents` in `src/api/documents.py` (Multipart-Upload, ruft `pdf_extraction`, `files.py`, `db.py` auf, setzt Status `processing`→`ready`/`failed`) (depends on T007, T011, T012, T009)
-- [ ] T015 [US1] Web-Oberfläche Projektübersicht + Upload in `src/web/templates/projects.html` und `src/web/static/upload.js` (Projekt anlegen, PDFs per Drag&Drop hochladen, Dokumentenliste mit Status anzeigen/entfernen) (depends on T013, T014)
-- [ ] T016 [US1] Validierung ergänzen: nur `.pdf`-Dateien akzeptieren, verständliche Fehlermeldung bei ungültigem/beschädigtem Dokument (FR-012) in `src/api/documents.py`
+- [X] T010 [P] [US1] Projekt-Datenzugriff in `src/storage/db.py`: `create_project`, `list_projects`, `get_project`, `delete_project` (kaskadierendes Löschen von Dokumenten/Nachrichten gemäss data-model.md) (depends on T005)
+- [X] T011 [P] [US1] Seitenweise PDF-Textextraktion in `src/core/pdf_extraction.py` (nutzt `pypdf`; liefert Liste von Seiten-Texten oder wirft Fehler bei ungültigem/textlosem PDF)
+- [X] T012 [US1] Dokument-Datenzugriff in `src/storage/db.py`: `create_document`, `list_documents`, `update_document_status`, `save_document_pages`, `delete_document` (depends on T010, T011)
+- [X] T013 [US1] Endpunkte `POST /api/projects`, `GET /api/projects`, `DELETE /api/projects/{project_id}` in `src/api/projects.py` gemäss contracts/api.md (Namens-Pflicht/-Eindeutigkeit, Fehlercodes `name_required`/`name_taken`) (depends on T010, T009)
+- [X] T014 [US1] Endpunkte `POST/GET/DELETE /api/projects/{project_id}/documents` in `src/api/documents.py` (Multipart-Upload, ruft `pdf_extraction`, `files.py`, `db.py` auf, setzt Status `processing`→`ready`/`failed`) (depends on T007, T011, T012, T009)
+- [X] T015 [US1] Web-Oberfläche Projektübersicht + Upload in `src/web/templates/projects.html` und `src/web/static/upload.js` (Projekt anlegen, PDFs per Drag&Drop hochladen, Dokumentenliste mit Status anzeigen/entfernen) (depends on T013, T014)
+- [X] T016 [US1] Validierung ergänzen: nur `.pdf`-Dateien akzeptieren, verständliche Fehlermeldung bei ungültigem/beschädigtem Dokument (FR-012) in `src/api/documents.py`
 
 **Checkpoint**: User Story 1 ist eigenständig nutzbar und testbar (Projekte + Dokumentenverwaltung, ohne Frage-Antwort-Funktion)
 

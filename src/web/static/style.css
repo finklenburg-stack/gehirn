@@ -1,0 +1,148 @@
+:root {
+  color-scheme: light dark;
+  --border: #d0d0d0;
+  --muted: #767676;
+  --accent: #2563eb;
+  --error: #b91c1c;
+}
+
+body {
+  font-family: system-ui, sans-serif;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 1rem 3rem;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 1.5rem;
+}
+
+.brand {
+  font-weight: 700;
+  text-decoration: none;
+  color: inherit;
+}
+
+.project-nav {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.project-link {
+  text-decoration: none;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  color: inherit;
+}
+
+.project-link.active {
+  border-color: var(--accent);
+  font-weight: 600;
+}
+
+.active-project-hint {
+  color: var(--muted);
+  margin-top: 0;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.error-banner {
+  color: var(--error);
+}
+
+.inline-form {
+  display: flex;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.inline-form input[type="text"] {
+  flex: 1;
+  padding: 0.5rem;
+}
+
+.project-list, .document-list {
+  list-style: none;
+  padding: 0;
+}
+
+.project-list li, .document-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.dropzone {
+  border: 2px dashed var(--border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  margin-bottom: 1rem;
+}
+
+.dropzone.dragover {
+  border-color: var(--accent);
+}
+
+.doc-status {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  background: #eee;
+}
+
+.status-ready { background: #dcfce7; }
+.status-processing { background: #fef9c3; }
+.status-failed { background: #fee2e2; }
+
+.message-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-height: 3rem;
+  margin-bottom: 0.5rem;
+}
+
+.message {
+  padding: 0.6rem 0.8rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  max-width: 90%;
+}
+
+.message-user {
+  align-self: flex-end;
+  background: #eff6ff;
+}
+
+.message-assistant {
+  align-self: flex-start;
+  background: #f8fafc;
+}
+
+.sources {
+  margin: 0.4rem 0 0;
+  padding-left: 1.2rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.loading-indicator {
+  color: var(--muted);
+  font-style: italic;
+  margin-bottom: 0.5rem;
+}

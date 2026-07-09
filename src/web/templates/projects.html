@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Projekte – Dokumenten-QA{% endblock %}
+{% block content %}
+  <h1>Projekte</h1>
+
+  {% if error %}
+    <p class="error-banner">{{ error }}</p>
+  {% endif %}
+
+  <form id="create-project-form" class="inline-form">
+    <input type="text" id="project-name" placeholder="Neues Projekt, z.B. CAS Data Science" required>
+    <button type="submit">Projekt anlegen</button>
+  </form>
+  <p id="create-project-error" class="error-banner" hidden></p>
+
+  <ul class="project-list">
+    {% for p in projects %}
+      <li>
+        <a href="/projects/{{ p.id }}">{{ p.name }}</a>
+        <span class="muted">({{ p.document_count }} Dokument(e))</span>
+      </li>
+    {% else %}
+      <li class="muted">Noch keine Projekte angelegt.</li>
+    {% endfor %}
+  </ul>
+
+  <script>
+    document.getElementById("create-project-form").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const nameInput = document.getElementById("project-name");
+      const errorEl = document.getElementById("create-project-error");
+      errorEl.hidden = true;
+      const response = await fetch("/api/projects", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: nameInput.value }),
+      });
+      if (response.ok) {
+        const project = await response.json();
+        window.location.href = `/projects/${project.id}`;
+        return;
+      }
+      const body = await response.json().catch(() => ({}));
+      errorEl.textContent = body.detail || "Projekt konnte nicht angelegt werden.";
+      errorEl.hidden = false;
+    });
+  </script>
+{% endblock %}

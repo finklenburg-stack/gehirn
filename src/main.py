@@ -29,7 +29,7 @@ def on_startup() -> None:
 
 @app.get("/", response_class=HTMLResponse)
 def index(request: Request):
-    return templates.TemplateResponse("projects.html", {"request": request, "projects": db.list_projects()})
+    return templates.TemplateResponse(request, "projects.html", {"projects": db.list_projects()})
 
 
 @app.get("/projects/{project_id}", response_class=HTMLResponse)
@@ -37,14 +37,15 @@ def project_detail(request: Request, project_id: str):
     project = db.get_project(project_id)
     if project is None:
         return templates.TemplateResponse(
+            request,
             "projects.html",
-            {"request": request, "projects": db.list_projects(), "error": "Projekt nicht gefunden."},
+            {"projects": db.list_projects(), "error": "Projekt nicht gefunden."},
             status_code=404,
         )
     return templates.TemplateResponse(
+        request,
         "chat.html",
         {
-            "request": request,
             "projects": db.list_projects(),
             "active_project": project,
             "documents": db.list_documents(project_id),

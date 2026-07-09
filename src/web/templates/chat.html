@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}{{ active_project.name }} – Dokumenten-QA{% endblock %}
+{% block content %}
+  <h1>{{ active_project.name }}</h1>
+
+  <section class="documents-panel">
+    <h2>Dokumente</h2>
+    <div id="dropzone" class="dropzone">
+      PDF hierher ziehen oder klicken zum Auswählen
+      <input type="file" id="file-input" accept="application/pdf" hidden>
+    </div>
+    <ul id="document-list" class="document-list">
+      {% for doc in documents %}
+        <li data-document-id="{{ doc.id }}">
+          <span class="doc-filename">{{ doc.filename }}</span>
+          <span class="doc-status status-{{ doc.status }}">{{ doc.status }}</span>
+          {% if doc.status == "failed" %}<span class="error-banner">{{ doc.error_message }}</span>{% endif %}
+          <button class="remove-doc" data-document-id="{{ doc.id }}">Entfernen</button>
+        </li>
+      {% else %}
+        <li class="muted" id="no-documents-hint">Noch keine Dokumente in diesem Projekt.</li>
+      {% endfor %}
+    </ul>
+  </section>
+
+  <section class="chat-panel">
+    <h2>Fragen</h2>
+    <div id="message-list" class="message-list">
+      {% for m in history %}
+        <div class="message message-{{ m.role }}">
+          <div class="message-content">{{ m.content }}</div>
+          {% if m.sources %}
+            <ul class="sources">
+              {% for s in m.sources %}
+                <li>{{ s.filename }}{% if s.page_number %}, Seite {{ s.page_number }}{% endif %}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+    <div id="loading-indicator" class="loading-indicator" hidden>Antwort wird erstellt …</div>
+    <form id="chat-form" class="inline-form">
+      <input type="text" id="question-input" placeholder="Frage zu diesem Projekt stellen …" required>
+      <button type="submit">Senden</button>
+    </form>
+    <p id="chat-error" class="error-banner" hidden></p>
+  </section>
+
+  <script>
+    window.PROJECT_ID = "{{ active_project.id }}";
+  </script>
+  <script src="/static/upload.js"></script>
+  <script src="/static/chat.js"></script>
+{% endblock %}

@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Dokumenten-QA{% endblock %}</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/">Dokumenten-QA</a>
+    <nav class="project-nav">
+      {% for p in projects %}
+        <a href="/projects/{{ p.id }}"
+           class="project-link{% if active_project and active_project.id == p.id %} active{% endif %}">
+          {{ p.name }}
+        </a>
+      {% else %}
+        <span class="muted">Noch keine Projekte</span>
+      {% endfor %}
+    </nav>
+  </header>
+  <main class="content">
+    {% if active_project %}
+      <p class="active-project-hint">Aktives Projekt: <strong>{{ active_project.name }}</strong></p>
+    {% endif %}
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>
