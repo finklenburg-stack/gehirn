@@ -29,10 +29,10 @@ Single-Project-Layout gemäss plan.md: `src/`, `tests/`, `data/` im Repository-R
 
 **Purpose**: Projekt-Grundgerüst anlegen
 
-- [ ] T001 Verzeichnisstruktur gemäss plan.md anlegen: `src/api/`, `src/core/`, `src/storage/`, `src/web/templates/`, `src/web/static/`, `tests/contract/`, `tests/integration/`, `tests/unit/`, `data/` (inkl. `__init__.py` in allen `src/`-Unterpaketen)
-- [ ] T002 Python-Projekt initialisieren: `pyproject.toml`/`requirements.txt` mit `fastapi`, `uvicorn`, `jinja2`, `anthropic`, `pypdf`, `python-dotenv`, `pytest` in Repository-Root
-- [ ] T003 [P] `.gitignore` um `.env`, `data/`, `__pycache__/`, `*.db` erweitern
-- [ ] T004 [P] `.env.example` mit Platzhalter `ANTHROPIC_API_KEY=` im Repository-Root anlegen
+- [X] T001 Verzeichnisstruktur gemäss plan.md anlegen: `src/api/`, `src/core/`, `src/storage/`, `src/web/templates/`, `src/web/static/`, `tests/contract/`, `tests/integration/`, `tests/unit/`, `data/` (inkl. `__init__.py` in allen `src/`-Unterpaketen)
+- [X] T002 Python-Projekt initialisieren: `pyproject.toml`/`requirements.txt` mit `fastapi`, `uvicorn`, `jinja2`, `anthropic`, `pypdf`, `python-dotenv`, `pytest` in Repository-Root
+- [X] T003 [P] `.gitignore` um `.env`, `data/`, `__pycache__/`, `*.db` erweitern
+- [X] T004 [P] `.env.example` mit Platzhalter `ANTHROPIC_API_KEY=` im Repository-Root anlegen
 
 ---
 
@@ -42,11 +42,11 @@ Single-Project-Layout gemäss plan.md: `src/`, `tests/`, `data/` im Repository-R
 
 **⚠️ CRITICAL**: Keine User-Story-Arbeit beginnt, bevor diese Phase abgeschlossen ist
 
-- [ ] T005 SQLite-Schema (Tabellen `projects`, `documents`, `document_pages`, `messages` gemäss data-model.md) und Init-Funktion in `src/storage/db.py`
-- [ ] T006 [P] Konfigurations-Loader in `src/config.py` (liest `ANTHROPIC_API_KEY` aus Umgebungsvariable/`.env` via `python-dotenv`, wirft verständlichen Fehler bei fehlendem Key gemäss Prinzip V)
-- [ ] T007 [P] Dateisystem-Helper in `src/storage/files.py` (Projekt-Ordner unter `data/<project_id>/documents/` anlegen, PDF speichern/löschen, Projekt-Ordner beim Löschen entfernen)
-- [ ] T008 FastAPI-Grundgerüst in `src/main.py` (App-Instanz, Router-Einbindung, Jinja2-Template-Setup, Static-Files-Mount, DB-Init beim Start) (depends on T005)
-- [ ] T009 [P] Einheitliches Fehlerantwort-Schema (`{error, detail}` gemäss contracts/api.md) als Hilfsfunktion in `src/api/errors.py`
+- [X] T005 SQLite-Schema (Tabellen `projects`, `documents`, `document_pages`, `messages` gemäss data-model.md) und Init-Funktion in `src/storage/db.py`
+- [X] T006 [P] Konfigurations-Loader in `src/config.py` (liest `ANTHROPIC_API_KEY` aus Umgebungsvariable/`.env` via `python-dotenv`, wirft verständlichen Fehler bei fehlendem Key gemäss Prinzip V)
+- [X] T007 [P] Dateisystem-Helper in `src/storage/files.py` (Projekt-Ordner unter `data/<project_id>/documents/` anlegen, PDF speichern/löschen, Projekt-Ordner beim Löschen entfernen)
+- [X] T008 FastAPI-Grundgerüst in `src/main.py` (App-Instanz, Router-Einbindung, Jinja2-Template-Setup, Static-Files-Mount, DB-Init beim Start) (depends on T005)
+- [X] T009 [P] Einheitliches Fehlerantwort-Schema (`{error, detail}` gemäss contracts/api.md) als Hilfsfunktion in `src/api/errors.py`
 
 **Checkpoint**: Fundament steht – User-Story-Implementierung kann beginnen
 
